@@ -1,2 +1,52 @@
 <h2 class="page-header">Course Management</h2>
 <h3>You can register, update, and drop the courses here</h3>
+<button *ngIf="showCourseAddButton" (click)="showCourseAddForm=!showCourseAddForm" class="btn btn-primary mb-3">Add Course</button>
+<!-- <button *ngIf="!showCourseAddButton" (click)="showCourseAddForm=!showCourseAddForm" class="btn btn-primary mb-3">Update Course</button> -->
+<div id="editSection" class="card card-body mb-3" *ngIf="showCourseAddForm">
+  <h4 *ngIf="showCourseAddButton">Add New Course</h4>
+  <h4 *ngIf="!showCourseAddButton">Update Course</h4>
+  <form (submit)="isEdit ? onUpdate():onSubmit()">
+    <div class="form-group">
+      <label>Course Name</label>
+      <input type="text" class="form-control" [(ngModel)]="course.courseName" name="courseName">
+    </div>
+    <div class="form-group">
+      <label>Course Code</label>
+      <input type="text" class="form-control" [(ngModel)]="course.courseCode" name="courseCode">
+    </div>
+    <div class="form-group">
+      <label>Section</label>
+      <input type="text" class="form-control" [(ngModel)]="course.section" name="section">
+    </div>
+    <div class="form-group">
+      <label>Semester</label>
+      <input type="text" class="form-control" [(ngModel)]="course.semester" name="semester">
+    </div>
+    <input *ngIf="!isEdit" type="submit" class="btn btn-secondary" [disabled]="!course.courseName||!course.courseCode||!course.section||!course.semester"
+      value="Add" />
+      <input *ngIf="isEdit" type="submit" class="btn btn-secondary" [disabled]="!course.courseName||!course.courseCode||!course.section||!course.semester"
+      value="Update" />
+      <input *ngIf="isEdit" (click)="onCancel()" type="button" class="btn btn-secondary" value="cancel"/>
+  </form>
+</div>
+<h4 *ngIf="courses?.length>0">Your registered courses below</h4>
+<ul class="list-unstyled">
+  <li class="card card-body mb-2" *ngFor="let course of courses">
+    <h5>Course Name: {{course.courseName}}</h5>
+    <ul class="list-group mb-3">
+      <li class="list-group-item">Code: {{course.courseCode}}</li>
+      <li class="list-group-item">Section: {{course.section}}</li>
+      <li class="list-group-item">Semester: {{course.semester}}</li>
+    </ul>
+    <div class="text-left">
+      <button (click)="editCourse(course)" class="btn btn-danger">
+        <i class="fa fa-pencil"></i>
+      </button>
+      <button (click)="dropCourse(course)" class="btn btn-danger">
+        <i class="fa fa-remove"></i>
+      </button>
+    </div>
+  </li>
+</ul>
+
+<h4 *ngIf="courses?.length==0">You don't have any registered course for now</h4>

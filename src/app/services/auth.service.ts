@@ -11,6 +11,31 @@ export class AuthService {
 
   constructor(private http: Http) { }
 
+  removeCourse(course){
+    let id=course._id;
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    //headers.append('Content-Type', 'application/json');
+    return this.http.delete(`http://localhost:3000/api/courses/${id}`, { headers: headers }).map(res => res.json());
+  }
+
+  updateCourse(course){
+    let id=course._id;
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    headers.append('Content-Type', 'application/json');
+    return this.http.put(`http://localhost:3000/api/courses/${id}`, course, { headers: headers }).map(res => res.json());
+  }
+  registerCourse(course) {
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    //headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/api/courses', course, { headers: headers }).map(res => res.json());
+  }
+
   registerStudent(student) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -31,6 +56,14 @@ export class AuthService {
     this.student = student;
   }
 
+  getCourses() {
+    let headers = new Headers();
+    this.loadToken();
+    headers.append('Authorization', this.authToken);
+    return this.http.get('http://localhost:3000/api/courses', { headers: headers })
+      .map(res => res.json());
+  }
+
   getProfile() {
     let headers = new Headers();
     this.loadToken();
@@ -48,7 +81,7 @@ export class AuthService {
   loggedIn() {
     return tokenNotExpired('id_token');
   }
-  
+
   logout() {
     this.authToken = null;
     this.student = null;
